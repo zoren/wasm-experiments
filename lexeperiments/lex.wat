@@ -9,7 +9,7 @@
         i32.add
         call $put_char
         local.get 0
-        (br_if 1 (i32.eq (local.get 0) (i32.const 0)))
+        (br_if 1 (i32.lt_s (local.get 0) (i32.const 0)))
         (br 0)
     )
   )

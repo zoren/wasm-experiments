@@ -13,7 +13,7 @@ function doIt(input) {
     var importObject = {
         imports: {
             put_char : arg => console.log(String.fromCharCode(arg)),
-            get_char : () => inputIndex<input.length ? input.charCodeAt(inputIndex++) : 0
+            get_char : () => inputIndex < input.length ? input.charCodeAt(inputIndex++) : -1
         }
     };
 
