@@ -11,7 +11,7 @@
   )
   (func $is_digit (param i32) (result i32)
     i32.const 48 ;; 0
-    i32.const 58 ;; 9
+    i32.const 57 ;; 9
     local.get 0
     call $is_between
   )
