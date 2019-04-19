@@ -15,7 +15,7 @@
     local.get 0
     call $is_between
   )
-  (func (export "main") (local $c i32) (local $isD i32)
+  (func (export "main") (local $c i32)
     (loop
         call $get_char
         local.set $c
