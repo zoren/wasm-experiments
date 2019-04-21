@@ -3,10 +3,9 @@
   (func $put_char (import "imports" "put_char") (param i32))
   ;; check if x is in the inclusive range from lower to upper
   (func $is_between (param $lower i32) (param $upper i32) (param $x i32) (result i32)
-    (select
-      (i32.le_u (local.get $x) (local.get $upper))
-      (i32.const 0)
-      (i32.le_u (local.get $lower) (local.get $x))
+    (if (result i32) (i32.le_u (local.get $lower) (local.get $x))
+      (then (i32.le_u (local.get $x) (local.get $upper)))
+      (else (i32.const 0))
     )
   )
   (func $is_digit (param i32) (result i32)
