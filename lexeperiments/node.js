@@ -4,19 +4,20 @@ const wasmUrl = 'out/lex.wasm';
 var source = fs.readFileSync(wasmUrl);
 var typedArray = new Uint8Array(source);
 
-function doIt(input) {
+async function doIt(input) {
     var inputIndex = 0;
-
+    var output = ""
     var importObject = {
         imports: {
-            put_char : arg => process.stdout.write(String.fromCharCode(arg)),
+            put_char : arg => output += String.fromCharCode(arg),
             get_char : () => inputIndex < input.length ? input.charCodeAt(inputIndex++) : -1
         }
     };
 
-    WebAssembly.instantiate(typedArray, importObject).then(results => {
+    return WebAssembly.instantiate(typedArray, importObject).then(results => {
         instance = results.instance;
         instance.exports.main();
-      }).catch(console.error);
+        return output;
+      });
 }
-doIt("abzABZ123:@#@#!");
+doIt("abzABZ123:@#@#!").then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));
