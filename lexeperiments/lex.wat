@@ -33,12 +33,37 @@
       (call $is_upper (local.get 0))
     )
   )
+  (func $classify_char (param $c i32) (result i32)
+    (block
+    (block
+    (block
+    (block
+    (block
+    (br_table
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; NUL SOH STX ETX EOT ENQ ACK BEL BS HT LF VT FF CT SO SI
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; control characters
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; space ! " # $ & ' ( ) * + - . /
+      1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 ;; 0123456789:;<=>?
+      0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 ;; @ABC...O
+      2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 ;; PQR...Z[\]^_
+      0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 ;; `abc...o
+      3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 ;; pqr...z{|}~ DEL
+      4
+      (local.get $c)
+    )
+    unreachable)
+    (return (i32.const 0)))
+    (return (i32.const 1)))
+    (return (i32.const 2)))
+    (return (i32.const 3)))
+    (i32.const 9)
+  )
   (func (export "main") (local $c i32)
     (loop
         call $get_char
         local.set $c
         (br_if 1 (i32.lt_s (local.get $c) (i32.const 0)))
-        (select (i32.const 84) (i32.const 70) (call $is_alpha (local.get $c)))
+        (i32.add (i32.const 48) (call $classify_char (local.get $c)))
         call $put_char
         br 0
     )

@@ -20,4 +20,4 @@ async function doIt(input) {
         return output;
       });
 }
-doIt("abzABZ123:@#@#!").then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));
+doIt(" 123ascABCæ").then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));
