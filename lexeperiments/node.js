@@ -17,7 +17,10 @@ async function doIt(input) {
     return WebAssembly.instantiate(typedArray, importObject).then(results => {
         instance = results.instance;
         instance.exports.main();
+//        const memory = new Uint8Array(instance.exports.mem.buffer, 0, 20);
+//        process.stdout.write(memory.toString());
+//        process.stdout.write("\n");
         return output;
       });
 }
-doIt(" 123ascABCæ").then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));
+doIt("i32 12345").then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));
