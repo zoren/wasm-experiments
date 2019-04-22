@@ -51,7 +51,7 @@
       4
       (local.get $c)
     )
-    unreachable)
+    )
     (return (i32.const 0)))
     (return (i32.const 1)))
     (return (i32.const 2)))
