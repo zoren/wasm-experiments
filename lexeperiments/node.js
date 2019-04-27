@@ -23,4 +23,5 @@ async function doIt(input) {
         return output;
       });
 }
-doIt("i32 12345").then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));
+const test = "i32 12345 -1 local.set $prevCharClass $get_char (local.get $c)";
+doIt(test).then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));

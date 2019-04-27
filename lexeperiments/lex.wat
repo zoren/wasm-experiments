@@ -39,23 +39,31 @@
     (block
     (block
     (block
+    (block
     (br_table
+      ;; 0 are control and illegal chars
+      ;; 1 are digits and -
+      ;; 2 are chars, underscore and dollar sign
+      ;; 3 are whitespace
+      ;; 4 are atomic chars (, ) and .
+      ;; 5 are non-ASCII
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; NUL SOH STX ETX EOT ENQ ACK BEL BS HT LF VT FF CT SO SI
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; control characters
-      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; space ! " # $ & ' ( ) * + - . /
+      3 0 0 0 2 0 0 0 4 4 0 0 0 1 4 0 ;; space ! " # $ % & ' ( ) * + - . /
       1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 ;; 0123456789:;<=>?
       0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 ;; @ABC...O
-      2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 ;; PQR...Z[\]^_
-      0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 ;; `abc...o
-      3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 ;; pqr...z{|}~ DEL
-      4
+      2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 2 ;; PQR...Z[\]^_
+      0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 ;; `abc...o
+      2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 ;; pqr...z{|}~ DEL
+      5
       (local.get $c)
     )
     )
     (return (i32.const 0)))
     (return (i32.const 1)))
     (return (i32.const 2)))
-    (return (i32.const 2)))
+    (return (i32.const 3)))
+    (return (i32.const 4)))
     (i32.const 9)
   )
   (memory (export "mem") 1)
@@ -96,7 +104,7 @@
           (then (local.set $bufferIndex (i32.add (local.get $bufferIndex) (i32.const 1))))
           (else
             (block
-              (if (i32.or (i32.eq (local.get $firstCharClass) (i32.const 1)) (i32.eq (local.get $firstCharClass) (i32.const 2)))
+              (if (i32.or (i32.ne (local.get $firstCharClass) (i32.const 0)) (i32.eq (local.get $firstCharClass) (i32.const 2)))
                 (then (call $printBuffer (local.get $bufferIndex)))
               )
               (local.set $firstCharClass (local.get $curCharClass))
