@@ -28,6 +28,6 @@ async function doIt(input) {
 //        process.stdout.write("\n");
       });
 }
-const test = "\"a b\" i32 12345 -1 (local.get $c) a12345678";
+const test = "\"a b\" i32 12345 -1 (local.get $c) a1234567";
 doIt(test).then(x => process.stdout.write(x)).catch(args => {process.stdout.write(args[1]);
     console.log(args[0]);} );
