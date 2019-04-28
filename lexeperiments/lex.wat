@@ -10,11 +10,10 @@
     (block
     (br_table
       ;; 0 are control and illegal chars
-      ;; 1 are digits and -
-      ;; 2 are chars, underscore and dollar sign
+      ;; 1 are digits, underscore and -
+      ;; 2 are chars and dollar sign
       ;; 3 are whitespace
       ;; 4 are atomic chars (, ) and .
-      ;; 5 are non-ASCII
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; NUL SOH STX ETX EOT ENQ ACK BEL BS HT LF VT FF CT SO SI
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; control characters
       3 0 4 0 2 0 0 0 4 4 0 0 0 1 4 0 ;; space ! " # $ % & ' ( ) * + - . /
@@ -23,7 +22,7 @@
       2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 1 ;; PQR...Z[\]^_
       0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 ;; `abc...o
       2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 ;; pqr...z{|}~ DEL
-      0
+      0                               ;; above ASCII
       (local.get $c)
     )
     )
@@ -87,6 +86,11 @@
         (if (i32.eq (local.get $curCharClass) (i32.const 0))
           (then (call $abort (i32.const 73)))
         )
+        ;; numbers 0 -1 128 1_000
+        ;; names i32 eq get $abort
+        ;; whitespace ' ', \t, \n
+        ;; atomic chars
+        ;; quoted strings, " followed by any number of non-" ended by "
         (if
           (i32.or
             (i32.and (i32.ne (local.get $curCharClass) (i32.const 4))
