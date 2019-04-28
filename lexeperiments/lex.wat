@@ -68,10 +68,12 @@
     (local $firstCharClass i32)
     (local $bufferIndex i32)
     (local $buffer i32)
+    (local $bufferEnd i32)
 
     (local.set $prevCharClass (i32.const -1))
     (local.set $buffer (call $alloc (i32.const 8)))
     (local.set $bufferIndex (local.get $buffer))
+    (local.set $bufferEnd (global.get $freeMemAddress))
     (loop
         (local.set $c (call $get_char))
         ;; stop at EOF
@@ -101,7 +103,7 @@
           )
           (then
             (block
-              (if (i32.eq (i32.add (local.get $buffer) (i32.const 7)) (local.get $bufferIndex))
+              (if (i32.eq (local.get $bufferIndex) (i32.sub (local.get $bufferEnd) (i32.const 1)))
                 (then (call $abort (i32.const 66)))
               )
               (local.set $bufferIndex (i32.add (local.get $bufferIndex) (i32.const 1)))
