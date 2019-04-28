@@ -112,7 +112,7 @@
               (call $printBuffer (local.get $bufferIndex))
               (local.set $firstCharClass (local.get $curCharClass))
               (local.set $bufferIndex (local.get $buffer))
-              )
+            )
           )
         )
         (i32.store8 (local.get $bufferIndex) (local.get $c))
