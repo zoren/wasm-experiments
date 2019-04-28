@@ -64,13 +64,11 @@
   )
   (func (export "main") (local $c i32)
     (local $curCharClass i32)
-    (local $prevCharClass i32)
     (local $firstCharClass i32)
     (local $bufferIndex i32)
     (local $buffer i32)
     (local $bufferEnd i32)
 
-    (local.set $prevCharClass (i32.const -1))
     (local.set $buffer (call $alloc (i32.const 8)))
     (local.set $bufferIndex (local.get $buffer))
     (local.set $bufferEnd (global.get $freeMemAddress))
@@ -95,7 +93,7 @@
         ;; quoted strings, " followed by any number of non-" ended by "
         (if
           (i32.or
-            (i32.eq (local.get $prevCharClass) (local.get $curCharClass))
+            (i32.eq (local.get $firstCharClass) (local.get $curCharClass))
             (i32.and (i32.eq (local.get $firstCharClass) (i32.const 2))
                       (i32.eq (local.get $curCharClass) (i32.const 1))
             )
@@ -117,7 +115,6 @@
           )
         )
         (i32.store8 (local.get $bufferIndex) (local.get $c))
-        (local.set $prevCharClass (local.get $curCharClass))
         br 0
     )
   )
