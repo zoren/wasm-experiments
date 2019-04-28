@@ -76,6 +76,10 @@
     (loop
         (local.set $c (call $get_char))
         (local.set $curCharClass (call $classify_char (local.get $c)))
+        ;; abort on illegal char
+        (if (i32.eq (local.get $curCharClass) (i32.const 0))
+          (then (call $abort (i32.const 73)))
+        )
         (if
           (i32.or
             (i32.and (i32.ne (local.get $curCharClass) (i32.const 4))
