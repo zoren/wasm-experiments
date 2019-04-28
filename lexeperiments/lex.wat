@@ -79,29 +79,42 @@
     (call $put_char (i32.const 10))
   )
   (global $freeMemAddress (mut i32) (i32.const 0))
+  (func $abort (param $c i32)
+    (call $put_char (i32.const 69))
+    (call $put_char (i32.const 32))
+    (call $put_char (local.get $c))
+    (call $put_char (i32.const 10))
+    unreachable
+  )
   (func $alloc (param $length i32) (result i32) (local $curFree i32)
     (local.set $curFree (global.get $freeMemAddress))
     (global.set $freeMemAddress (i32.add (global.get $freeMemAddress) (local.get $length)))
     (if (i32.gt_u (global.get $freeMemAddress) (i32.mul (i32.const 65536) (memory.size)))
       (then
         ;; todo grow memory
-        unreachable))
+        (call $abort (i32.const 77))))
     (return (local.get $curFree))
   )
   (func (export "main") (local $c i32) (local $curCharClass i32) (local $prevCharClass i32) (local $firstCharClass i32) (local $bufferIndex i32) (local $buffer i32)
     (local.set $prevCharClass (i32.const -1))
-    (local.set $buffer (call $alloc (i32.const 256)))
+    (local.set $buffer (call $alloc (i32.const 8)))
     (local.set $bufferIndex (local.get $buffer))
     (loop
         (local.set $c (call $get_char))
         (local.set $curCharClass (call $classify_char (local.get $c)))
         (if
-          (i32.or (i32.eq (local.get $prevCharClass) (local.get $curCharClass))
+          (i32.or
+            (i32.and (i32.ne (local.get $curCharClass) (i32.const 4))
+              (i32.eq (local.get $prevCharClass) (local.get $curCharClass)))
             (i32.and (i32.eq (local.get $firstCharClass) (i32.const 2))
                       (i32.eq (local.get $curCharClass) (i32.const 1))
             )
           )
-          (then (local.set $bufferIndex (i32.add (local.get $bufferIndex) (i32.const 1))))
+          (then
+            (if (i32.lt_u (local.get $bufferIndex) (i32.const 7))
+              (then (local.set $bufferIndex (i32.add (local.get $bufferIndex) (i32.const 1))))
+              (else (call $abort (i32.const 66)))
+          ))
           (else
             (block
               (if (i32.or (i32.ne (local.get $firstCharClass) (i32.const 0)) (i32.eq (local.get $firstCharClass) (i32.const 2)))

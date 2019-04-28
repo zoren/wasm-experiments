@@ -16,12 +16,18 @@ async function doIt(input) {
 
     return WebAssembly.instantiate(typedArray, importObject).then(results => {
         instance = results.instance;
-        instance.exports.main();
+        try {
+            instance.exports.main();
+            return output;
+        } catch (error) {
+            throw [error, output];
+        }
+
 //        const memory = new Uint8Array(instance.exports.mem.buffer, 0, 20);
 //        process.stdout.write(memory.toString());
 //        process.stdout.write("\n");
-        return output;
       });
 }
-const test = "i32 12345 -1 local.set $prevCharClass $get_char (local.get $c)";
-doIt(test).then(x => process.stdout.write(x)).catch(x => process.stderr.write(x));
+const test = "\"a b\" i32 12345 -1 (local.get $c) a12345678";
+doIt(test).then(x => process.stdout.write(x)).catch(args => {process.stdout.write(args[1]);
+    console.log(args[0]);} );
