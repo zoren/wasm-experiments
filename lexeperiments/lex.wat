@@ -95,8 +95,7 @@
         ;; quoted strings, " followed by any number of non-" ended by "
         (if
           (i32.or
-            (i32.and (i32.ne (local.get $curCharClass) (i32.const 4))
-              (i32.eq (local.get $prevCharClass) (local.get $curCharClass)))
+            (i32.eq (local.get $prevCharClass) (local.get $curCharClass))
             (i32.and (i32.eq (local.get $firstCharClass) (i32.const 2))
                       (i32.eq (local.get $curCharClass) (i32.const 1))
             )
