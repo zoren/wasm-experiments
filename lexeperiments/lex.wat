@@ -34,12 +34,12 @@
     (i32.const 9)
   )
   (memory (export "mem") 1)
-  (func $printBuffer (param $length i32) (local $index i32)
+  (func $printBuffer (param $start i32) (param $end i32)
     (block
     (loop
-      (br_if 1 (i32.eq (i32.add (local.get $length) (i32.const 1)) (local.get $index)))
-      (call $put_char (i32.load8_u (local.get $index)))
-      (local.set $index (i32.add (local.get $index) (i32.const 1)))
+      (call $put_char (i32.load8_u (local.get $start)))
+      (br_if 1 (i32.eq (local.get $start) (local.get $end)))
+      (local.set $start (i32.add (local.get $start) (i32.const 1)))
       br 0
     )
     )
@@ -79,7 +79,7 @@
         ;; stop at EOF
         (if (i32.lt_s (local.get $c) (i32.const 0))
           (then
-            (call $printBuffer (local.get $bufferIndex))
+            (call $printBuffer (local.get $buffer) (local.get $bufferIndex))
             br 2
           )
         )
@@ -110,7 +110,7 @@
           )
           (else
             (block
-              (call $printBuffer (local.get $bufferIndex))
+              (call $printBuffer (local.get $buffer) (local.get $bufferIndex))
               (local.set $firstCharClass (local.get $curCharClass))
               (local.set $bufferIndex (local.get $buffer))
             )
