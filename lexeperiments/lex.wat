@@ -17,13 +17,13 @@
       ;; 5 are non-ASCII
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; NUL SOH STX ETX EOT ENQ ACK BEL BS HT LF VT FF CT SO SI
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ;; control characters
-      3 0 0 0 2 0 0 0 4 4 0 0 0 1 4 0 ;; space ! " # $ % & ' ( ) * + - . /
+      3 0 4 0 2 0 0 0 4 4 0 0 0 1 4 0 ;; space ! " # $ % & ' ( ) * + - . /
       1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 ;; 0123456789:;<=>?
       0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 ;; @ABC...O
       2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 1 ;; PQR...Z[\]^_
       0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 ;; `abc...o
       2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 ;; pqr...z{|}~ DEL
-      5
+      0
       (local.get $c)
     )
     )
@@ -75,6 +75,13 @@
     (local.set $bufferIndex (local.get $buffer))
     (loop
         (local.set $c (call $get_char))
+        ;; stop at EOF
+        (if (i32.lt_s (local.get $c) (i32.const 0))
+          (then
+            (call $printBuffer (local.get $bufferIndex))
+            br 2
+          )
+        )
         (local.set $curCharClass (call $classify_char (local.get $c)))
         ;; abort on illegal char
         (if (i32.eq (local.get $curCharClass) (i32.const 0))
@@ -105,8 +112,6 @@
               )
           )
         )
-        ;; stop at EOF
-        (br_if 1 (i32.lt_s (local.get $c) (i32.const 0)))
         (i32.store8 (local.get $bufferIndex) (local.get $c))
         (local.set $prevCharClass (local.get $curCharClass))
         br 0
