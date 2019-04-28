@@ -90,6 +90,7 @@
           )
           (then
             (block
+              ;; todo this only works because the buffer is the first alloc
               (if (i32.eq (i32.const 7) (local.get $bufferIndex))
                 (then (call $abort (i32.const 66)))
               )
