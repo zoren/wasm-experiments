@@ -95,9 +95,7 @@
           ))
           (else
             (block
-              (if (i32.or (i32.ne (local.get $firstCharClass) (i32.const 0)) (i32.eq (local.get $firstCharClass) (i32.const 2)))
-                (then (call $printBuffer (local.get $bufferIndex)))
-              )
+              (call $printBuffer (local.get $bufferIndex))
               (local.set $firstCharClass (local.get $curCharClass))
               (local.set $bufferIndex (local.get $buffer))
               )
