@@ -89,10 +89,13 @@
             )
           )
           (then
-            (if (i32.lt_u (local.get $bufferIndex) (i32.const 7))
-              (then (local.set $bufferIndex (i32.add (local.get $bufferIndex) (i32.const 1))))
-              (else (call $abort (i32.const 66)))
-          ))
+            (block
+              (if (i32.eq (i32.const 7) (local.get $bufferIndex))
+                (then (call $abort (i32.const 66)))
+              )
+              (local.set $bufferIndex (i32.add (local.get $bufferIndex) (i32.const 1)))
+            )
+          )
           (else
             (block
               (call $printBuffer (local.get $bufferIndex))
